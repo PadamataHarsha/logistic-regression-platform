@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#142823">
+  <title>{% block title %}Platform{% endblock %} | Signal &amp; Co.</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='styles.css').path }}">
+  <script defer src="{{ url_for('static', path='app.js').path }}"></script>
+</head>
+<body class="{% if not user %}public-shell{% endif %}">
+  {% if user %}
+  <div class="app-shell">
+    <aside class="sidebar" id="site-nav">
+      <a class="brand" href="/dashboard" aria-label="Signal and Co. dashboard">
+        <span class="brand-mark">S<span>.</span></span>
+        <span class="brand-copy"><strong>Signal &amp; Co.</strong><small>MODEL INTELLIGENCE</small></span>
+      </a>
+      <div class="nav-caption">WORKSPACE</div>
+      <nav class="main-nav" aria-label="Main navigation">
+        {% for label, href, roles in navigation %}
+        <a class="nav-link {% if request.url.path == href %}is-active{% endif %}" href="{{ href }}">
+          <span class="nav-indicator" aria-hidden="true"></span>{{ label }}
+        </a>
+        {% endfor %}
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-note"><span class="status-dot"></span><span>Local model<br><strong>Educational workspace</strong></span></div>
+        <form action="/logout" method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <button class="nav-link logout-link" type="submit"><span class="nav-indicator" aria-hidden="true"></span>Sign out</button>
+        </form>
+      </div>
+    </aside>
+    <div class="main-column">
+      <header class="topbar">
+        <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="site-nav"><span></span><span></span></button>
+        <div class="topbar-context">AD RESPONSE <span>/</span> {% block eyebrow %}OVERVIEW{% endblock %}</div>
+        <a class="user-chip" href="/profile"><span class="avatar">{{ user.username[:1]|upper }}</span><span><strong>{{ user.username }}</strong><small>{{ user.role|title }}</small></span></a>
+      </header>
+      <main class="page-content">
+  {% else %}
+    <main class="public-content">
+  {% endif %}
+  {% block content %}{% endblock %}
+  {% if user %}
+      </main>
+      <footer class="site-footer"><span>Signal &amp; Co. <span class="footer-divider">/</span> Advertising Response Lab</span><span>Educational use only</span></footer>
+    </div>
+  </div>
+  {% else %}
+    </main>
+  {% endif %}
+</body>
+</html>

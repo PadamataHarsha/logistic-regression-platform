@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block title %}Model unavailable{% endblock %}
+{% block content %}<section class="error-page"><p class="eyebrow">MODEL / NOT READY</p><span class="error-code error-code-small">MODEL OFFLINE</span><h1>The trained model is not available yet.</h1><p class="muted">The server does not train a model during page requests. In the project directory, run:</p><pre class="command-block"><code>python train_model.py</code></pre><p class="muted">Then restart the app. The model and its metadata will be saved under <code>models/</code>.</p><a class="button button-primary" href="/dashboard">Return to dashboard <span aria-hidden="true">&rarr;</span></a></section>{% endblock %}

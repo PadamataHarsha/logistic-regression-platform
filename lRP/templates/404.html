@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block title %}Page not found{% endblock %}
+{% block content %}<section class="error-page"><p class="eyebrow">404 / NOT FOUND</p><span class="error-code">404</span><h1>That page is not in this workspace.</h1><p class="muted">The address may have changed, or the page may not exist.</p><a class="button button-primary" href="{% if user %}/dashboard{% else %}/login{% endif %}">Return to a page <span aria-hidden="true">&rarr;</span></a></section>{% endblock %}

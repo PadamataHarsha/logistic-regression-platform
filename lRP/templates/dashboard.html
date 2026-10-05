@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block eyebrow %}DASHBOARD{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <div><p class="eyebrow">MONDAY, MODEL WORKSPACE</p><h1>Good to see you, {{ user.username }}.</h1><p class="muted">A clear view of the dataset, the model, and recent activity.</p></div>
+  <a class="button button-primary" href="/prediction">New prediction <span aria-hidden="true">&rarr;</span></a>
+</section>
+{% if not model_loaded %}<div class="alert alert-warning"><strong>Model not trained yet.</strong> Run <code>python train_model.py</code> in the project directory to create the model and dashboard metrics.</div>{% endif %}
+<div class="metric-grid">
+  <article class="metric-card metric-feature"><div class="metric-label">DATASET RECORDS <span class="metric-symbol">01</span></div><strong>{{ metadata.get('dataset_records', '—') }}</strong><p>Real advertising observations</p></article>
+  <article class="metric-card"><div class="metric-label">MODEL FEATURES <span class="metric-symbol">02</span></div><strong>{{ metadata.get('features', [])|length if metadata else '—' }}</strong><p>Ordered numeric inputs</p></article>
+  <article class="metric-card"><div class="metric-label">HOLDOUT ACCURACY <span class="metric-symbol">03</span></div><strong>{% if metadata.get('metrics') %}{{ '%.1f'|format(metadata.metrics.accuracy * 100) }}<small>%</small>{% else %}—{% endif %}</strong><p>Measured on held-out rows</p></article>
+  <article class="metric-card"><div class="metric-label">TEST RECORDS <span class="metric-symbol">04</span></div><strong>{{ metadata.get('testing_records', '—') }}</strong><p>30% stratified test split</p></article>
+</div>
+<div class="content-grid dashboard-grid">
+  <section class="panel panel-chart"><div class="panel-heading"><div><p class="eyebrow">CLASS MIX</p><h2>Target distribution</h2></div><span class="status-badge {% if model_loaded %}status-good{% else %}status-muted{% endif %}">{% if model_loaded %}REAL DATA{% else %}NO MODEL{% endif %}</span></div>
+    {% if model_loaded %}<img class="chart-image chart-short" src="{{ url_for('static', path='images/target_distribution.png') }}" alt="Bar chart showing target class counts in the full advertising dataset">{% else %}<div class="empty-state">Train the model to generate this chart.</div>{% endif %}
+    {% if metadata.get('target_distribution') %}<div class="distribution-legend">{% for label, count in metadata.target_distribution.items() %}<span><i class="legend-dot {% if loop.index == 2 %}legend-orange{% endif %}"></i>{{ label }} <strong>{{ count }}</strong></span>{% endfor %}</div>{% endif %}
+  </section>
+  <section class="panel model-panel"><div class="panel-heading"><div><p class="eyebrow">MODEL STATUS</p><h2>{{ metadata.get('model_name', 'Logistic Regression') }}</h2></div><span class="status-badge {% if model_loaded %}status-good{% else %}status-muted{% endif %}"><i></i>{% if model_loaded %}READY{% else %}MISSING{% endif %}</span></div>
+    <dl class="detail-list"><div><dt>Training records</dt><dd>{{ metadata.get('training_records', '—') }}</dd></div><div><dt>Precision</dt><dd>{% if metadata.get('metrics') %}{{ '%.3f'|format(metadata.metrics.precision) }}{% else %}—{% endif %}</dd></div><div><dt>Recall</dt><dd>{% if metadata.get('metrics') %}{{ '%.3f'|format(metadata.metrics.recall) }}{% else %}—{% endif %}</dd></div><div><dt>F1-score</dt><dd>{% if metadata.get('metrics') %}{{ '%.3f'|format(metadata.metrics.f1_score) }}{% else %}—{% endif %}</dd></div><div><dt>Last trained</dt><dd>{% if metadata.get('last_trained') %}{{ metadata.last_trained[:10] }}{% else %}Not yet{% endif %}</dd></div></dl>
+    <p class="panel-footnote">Metrics describe the saved model's stratified 30% holdout set.</p>
+  </section>
+</div>
+<section class="panel activity-panel"><div class="panel-heading"><div><p class="eyebrow">THIS SESSION</p><h2>Recent predictions</h2></div><a class="quiet-link" href="/prediction">Open predictor <span aria-hidden="true">&rarr;</span></a></div>
+  {% if recent_predictions %}<div class="table-scroll"><table><thead><tr><th>RESULT</th><th>CONFIDENCE</th><th>TIME</th></tr></thead><tbody>{% for item in recent_predictions %}<tr><td><span class="result-dot"></span>{{ item.label }}</td><td>{{ '%.1f'|format(item.confidence) }}%</td><td>{{ item.created_at }}</td></tr>{% endfor %}</tbody></table></div>{% else %}<div class="empty-inline"><span class="empty-icon">↗</span><div><strong>No predictions in this session</strong><p>Run a prediction to see your recent activity here.</p></div><a class="quiet-link" href="/prediction">Start now</a></div>{% endif %}
+</section>
+<section class="panel feature-summary"><div class="panel-heading"><div><p class="eyebrow">MODEL INPUTS</p><h2>Features in the saved pipeline</h2></div><a class="quiet-link" href="/about">About this model</a></div>{% if metadata.get('features') %}<div class="feature-chip-list">{% for feature in metadata.features %}<span>{{ feature.display_name|default(feature.name) }}</span>{% endfor %}</div>{% else %}<div class="empty-state">Feature details are available after model training.</div>{% endif %}<p class="panel-footnote">The saved feature order is preserved when predictions are submitted.</p></section>
+{% endblock %}

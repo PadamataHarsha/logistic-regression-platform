@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Prediction{% endblock %}
+{% block eyebrow %}PREDICTION{% endblock %}
+{% block content %}
+<section class="page-heading"><div><p class="eyebrow">MODEL WORKSPACE / INPUT</p><h1>Estimate ad engagement.</h1><p class="muted">Enter a visitor profile using the ranges observed in the training dataset.</p></div><span class="status-badge status-good"><i></i>MODEL READY</span></section>
+<div class="prediction-layout">
+  <section class="panel prediction-panel"><div class="panel-heading"><div><p class="eyebrow">VISITOR PROFILE</p><h2>Model inputs</h2></div><span class="small-count">{{ features|length }} FEATURES</span></div>
+    {% if errors.get('form') %}<div class="alert alert-error" role="alert">{{ errors.form }}</div>{% endif %}
+    <form action="/prediction" method="post" class="prediction-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      {% for feature in features %}
+      <div class="field-block {% if errors.get(feature.name) %}field-invalid{% endif %}">
+        <label for="feature-{{ loop.index }}">{{ feature.display_name|default(feature.name) }}</label>
+        {% if feature.kind == 'binary' %}<select id="feature-{{ loop.index }}" name="features" required><option value="">Select a value</option><option value="0" {% if values[loop.index0] == '0' %}selected{% endif %}>0 — Female</option><option value="1" {% if values[loop.index0] == '1' %}selected{% endif %}>1 — Male</option></select>
+        {% else %}<input id="feature-{{ loop.index }}" name="features" type="number" inputmode="decimal" step="any" min="{{ feature.min }}" max="{{ feature.max }}" value="{{ values[loop.index0] }}" required>{% endif %}
+        <small>{{ feature.description|default('Enter a value from the observed training-data range.') }} {% if feature.kind == 'binary' %}Dataset coding: 0 = female, 1 = male.{% else %}Observed range: {{ '%.2f'|format(feature.min) }} to {{ '%.2f'|format(feature.max) }}.{% endif %}</small>
+        {% if errors.get(feature.name) %}<span class="field-error" role="alert">{{ errors[feature.name] }}</span>{% endif %}
+      </div>
+      {% endfor %}
+      <div class="form-actions"><button class="button button-primary" type="submit"><span>Run prediction</span><span aria-hidden="true">&rarr;</span></button><span class="form-hint">All fields are required.</span></div>
+    </form>
+  </section>
+  <aside class="prediction-aside"><div class="aside-note"><span class="aside-number">01</span><h3>How to read this</h3><p>The model uses scaled values for all five inputs. Keep each value within the training dataset range.</p></div><div class="aside-note aside-warning"><span class="aside-number">!</span><h3>Educational estimate</h3><p>This result is an estimate from historical data, not a guaranteed outcome or a decision recommendation.</p></div></aside>
+</div>
+{% if result %}
+<section class="result-panel" aria-live="polite">
+  <div class="result-head">
+    <div><p class="eyebrow">MODEL OUTPUT / CLASS {{ result.class }}</p><span class="status-badge {% if result.class == 1 %}status-good{% else %}status-muted{% endif %}">{{ result.label }}</span><h2 class="result-title">{{ result.label }}</h2><p>The model's estimated class for the entered profile.</p></div>
+    <div class="confidence-score"><strong>{{ '%.1f'|format(result.confidence * 100) }}%</strong><small>CONFIDENCE</small></div>
+  </div>
+  <div class="probability-grid">
+    <div><span>Probability: unlikely to click</span><strong>{{ '%.1f'|format(result.probability_0 * 100) }}%</strong><progress class="probability-progress" value="{{ result.probability_0 * 100 }}" max="100">{{ result.probability_0 * 100 }}%</progress></div>
+    <div><span>Probability: likely to click</span><strong>{{ '%.1f'|format(result.probability_1 * 100) }}%</strong><progress class="probability-progress probability-progress-pink" value="{{ result.probability_1 * 100 }}" max="100">{{ result.probability_1 * 100 }}%</progress></div>
+  </div>
+  <div class="input-summary"><strong>Submitted profile</strong><dl>{% for feature in features %}<div><dt>{{ feature.display_name|default(feature.name) }}</dt><dd>{{ values[loop.index0] }}</dd></div>{% endfor %}</dl></div>
+  <div class="result-actions"><a class="button button-primary" href="/prediction">Make another prediction</a><a class="quiet-link" href="/dashboard">Back to dashboard</a></div>
+  <p class="result-disclaimer">Probabilities are model estimates based on this dataset. They should not be treated as guaranteed real-world results.</p>
+</section>
+{% endif %}
+{% endblock %}

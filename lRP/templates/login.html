@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block content %}
+<section class="login-layout">
+  <div class="login-art">
+    <div class="login-art-top"><a class="brand brand-light" href="/login" aria-label="Signal and Co. home"><span class="brand-mark">S<span>.</span></span><span class="brand-copy"><strong>Signal &amp; Co.</strong><small>AD RESPONSE INTELLIGENCE</small></span></a><span class="edition">MODEL WORKSPACE <i></i></span></div>
+    <div class="art-copy"><p class="eyebrow eyebrow-light">A CLEARER VIEW OF ENGAGEMENT</p><h1>Find meaning<br>in the <em>signals.</em></h1><p>Explore how visitor behavior connects with ad response, through a real Logistic Regression model.</p></div>
+    <div class="login-highlights"><div class="login-highlight"><strong>Real dataset</strong>Existing visitor records</div><div class="login-highlight"><strong>Explainable model</strong>See metrics and inputs</div><div class="login-highlight"><strong>Private workspace</strong>Role-based access</div></div>
+    <div class="login-stats"><div class="login-stat"><strong>{{ metadata.get('dataset_records', '—') }}</strong><span>dataset records</span></div><div class="login-stat"><strong>{{ metadata.get('features', [])|length if metadata else '—' }}</strong><span>ordered features</span></div><div class="login-stat"><strong>{% if metadata.get('metrics') %}{{ '%.1f'|format(metadata.metrics.accuracy * 100) }}%{% else %}—{% endif %}</strong><span>holdout accuracy</span></div></div>
+    <div class="art-graph" aria-hidden="true"><div class="graph-axis"></div><div class="graph-line"></div><i class="graph-point point-a"></i><i class="graph-point point-b"></i><i class="graph-point point-c"></i><i class="graph-point point-d"></i><span>MODEL CONFIDENCE</span></div>
+    <div class="art-footer"><span>DATA SCIENCE / FIELD NOTES</span><span>EDUCATIONAL MODEL</span></div>
+  </div>
+  <div class="login-panel">
+    <div class="login-form-wrap">
+      <p class="eyebrow">YOUR WORKSPACE</p>
+      <h2>Welcome back</h2>
+      <p class="muted login-intro">Sign in to continue to your model dashboard.</p>
+      {% if error %}<div class="alert alert-error" role="alert">{{ error }}</div>{% endif %}
+      <form action="/login" method="post" class="form-stack">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" autocomplete="username" value="{{ username }}" placeholder="Your username" required autofocus>
+        <div class="label-row"><label for="password">Password</label><button class="text-button" type="button" data-password-toggle="password" aria-pressed="false">Show</button></div>
+        <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Your password" required>
+        <label class="check-row" for="remember-me"><input id="remember-me" type="checkbox" name="remember_me" value="yes"><span>Remember me for 30 days</span></label>
+        <button class="button button-primary button-wide" type="submit"><span>Sign in</span><span aria-hidden="true">&rarr;</span></button>
+      </form>
+      <div class="demo-access"><div class="demo-heading"><span class="demo-mark">i</span><strong>Development demo accounts</strong></div><p>Use the sample usernames and passwords in the README. These credentials are for local demonstration only.</p><div class="role-list"><span>admin <b>ADMIN</b></span><span>analyst <b>ANALYST</b></span><span>viewer <b>VIEWER</b></span></div></div>
+      <p class="login-legal">For educational use. Model estimates are not guaranteed outcomes.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,225 @@
+{
+  "model_name": "StandardScaler + Logistic Regression",
+  "model_status": "trained",
+  "last_trained": "2026-10-05T06:06:25.288210+00:00",
+  "features": [
+    {
+      "name": "Daily Time Spent on Site",
+      "display_name": "Daily time on site",
+      "description": "Use the value recorded for time spent on the site in the source dataset's units.",
+      "min": 32.6,
+      "max": 91.43,
+      "mean": 65.0002,
+      "median": 68.215,
+      "kind": "numeric",
+      "coefficient": -2.7134497067244774
+    },
+    {
+      "name": "Age",
+      "display_name": "Age",
+      "description": "Enter the age value recorded in the dataset.",
+      "min": 19.0,
+      "max": 61.0,
+      "mean": 36.009,
+      "median": 35.0,
+      "kind": "numeric",
+      "coefficient": 1.190997226490437
+    },
+    {
+      "name": "Area Income",
+      "display_name": "Area income",
+      "description": "Use the income value in the same units as the source dataset.",
+      "min": 13996.5,
+      "max": 79484.8,
+      "mean": 55000.000080000005,
+      "median": 57012.3,
+      "kind": "numeric",
+      "coefficient": -1.5166998447486675
+    },
+    {
+      "name": "Daily Internet Usage",
+      "display_name": "Daily internet usage",
+      "description": "Use the usage value recorded in the source dataset's units.",
+      "min": 104.78,
+      "max": 269.96,
+      "mean": 180.0001,
+      "median": 183.13,
+      "kind": "numeric",
+      "coefficient": -2.324200315497444
+    },
+    {
+      "name": "Male",
+      "display_name": "Gender indicator",
+      "description": "The dataset encodes this field as 0 or 1.",
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.481,
+      "median": 0.0,
+      "kind": "binary",
+      "coefficient": -0.3591603604811415
+    }
+  ],
+  "feature_names": [
+    "Daily Time Spent on Site",
+    "Age",
+    "Area Income",
+    "Daily Internet Usage",
+    "Male"
+  ],
+  "feature_order": [
+    "Daily Time Spent on Site",
+    "Age",
+    "Area Income",
+    "Daily Internet Usage",
+    "Male"
+  ],
+  "target_name": "Clicked on Ad",
+  "class_labels": {
+    "0": "Unlikely to Click",
+    "1": "Likely to Click"
+  },
+  "metrics": {
+    "accuracy": 0.9766666666666667,
+    "precision": 0.9863945578231292,
+    "recall": 0.9666666666666667,
+    "f1_score": 0.9764309764309764
+  },
+  "classification_report": {
+    "0": {
+      "precision": 0.9673202614379085,
+      "recall": 0.9866666666666667,
+      "f1-score": 0.976897689768977,
+      "support": 150.0
+    },
+    "1": {
+      "precision": 0.9863945578231292,
+      "recall": 0.9666666666666667,
+      "f1-score": 0.9764309764309764,
+      "support": 150.0
+    },
+    "accuracy": 0.9766666666666667,
+    "macro avg": {
+      "precision": 0.9768574096305189,
+      "recall": 0.9766666666666667,
+      "f1-score": 0.9766643330999767,
+      "support": 300.0
+    },
+    "weighted avg": {
+      "precision": 0.976857409630519,
+      "recall": 0.9766666666666667,
+      "f1-score": 0.9766643330999767,
+      "support": 300.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      148,
+      2
+    ],
+    [
+      5,
+      145
+    ]
+  ],
+  "class_values": [
+    0,
+    1
+  ],
+  "target_distribution": {
+    "Unlikely to Click": 500,
+    "Likely to Click": 500
+  },
+  "training_records": 700,
+  "testing_records": 300,
+  "dataset_records": 1000,
+  "dataset_columns": [
+    "Daily Time Spent on Site",
+    "Age",
+    "Area Income",
+    "Daily Internet Usage",
+    "Ad Topic Line",
+    "City",
+    "Male",
+    "Country",
+    "Timestamp",
+    "Clicked on Ad"
+  ],
+  "dataset_shape": [
+    1000,
+    10
+  ],
+  "missing_values": {
+    "Daily Time Spent on Site": 0,
+    "Age": 0,
+    "Area Income": 0,
+    "Daily Internet Usage": 0,
+    "Ad Topic Line": 0,
+    "City": 0,
+    "Male": 0,
+    "Country": 0,
+    "Timestamp": 0,
+    "Clicked on Ad": 0
+  },
+  "numeric_summary": {
+    "Daily Time Spent on Site": {
+      "count": 1000.0,
+      "mean": 65.0002,
+      "std": 15.8536145675,
+      "min": 32.6,
+      "25%": 51.36,
+      "50%": 68.215,
+      "75%": 78.5475,
+      "max": 91.43
+    },
+    "Age": {
+      "count": 1000.0,
+      "mean": 36.009,
+      "std": 8.7855623101,
+      "min": 19.0,
+      "25%": 29.0,
+      "50%": 35.0,
+      "75%": 42.0,
+      "max": 61.0
+    },
+    "Area Income": {
+      "count": 1000.0,
+      "mean": 55000.00008,
+      "std": 13414.6340222824,
+      "min": 13996.5,
+      "25%": 47031.8025,
+      "50%": 57012.3,
+      "75%": 65470.635,
+      "max": 79484.8
+    },
+    "Daily Internet Usage": {
+      "count": 1000.0,
+      "mean": 180.0001,
+      "std": 43.902339302,
+      "min": 104.78,
+      "25%": 138.83,
+      "50%": 183.13,
+      "75%": 218.7925,
+      "max": 269.96
+    },
+    "Male": {
+      "count": 1000.0,
+      "mean": 0.481,
+      "std": 0.4998888765,
+      "min": 0.0,
+      "25%": 0.0,
+      "50%": 0.0,
+      "75%": 1.0,
+      "max": 1.0
+    },
+    "Clicked on Ad": {
+      "count": 1000.0,
+      "mean": 0.5,
+      "std": 0.5002501877,
+      "min": 0.0,
+      "25%": 0.0,
+      "50%": 0.5,
+      "75%": 1.0,
+      "max": 1.0
+    }
+  }
+}
